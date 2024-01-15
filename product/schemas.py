@@ -9,8 +9,9 @@ class ManufacturerSchema(Schema):
     name = fields.Str()
 
 class ProductSchema(Schema):
+    id = fields.Int()
     name = fields.Str()
     number_register = fields.Int()
     manufacturer = fields.Nested(ManufacturerSchema)
-    _type = fields.Nested(ProductTypeSchema)
+    _type = fields.Nested(ProductTypeSchema, data_key="type")
     description = fields.Str()

@@ -3,28 +3,28 @@ from flask import Blueprint
 from flask import request
 
 from mstarsupply_backend.database import db
-from product.models import ProductType, Manufacturer, Product
-from product.schemas import ProductTypeSchema, ProductSchema, ManufacturerSchema
+from .models import ProductType, Manufacturer, Product
+from .schemas import ProductTypeSchema, ProductSchema, ManufacturerSchema
 
 from sqlalchemy import select
 
 bp_product = Blueprint('product', __name__ , url_prefix="/product")
 
-@bp_product.route('/type')
+@bp_product.route('/type', methods=['GET'])
 def type_list():
     all_types = ProductType.query.all()
     schema = ProductTypeSchema(many=True)
     result = schema.dump(all_types)
     return result, 200
 
-@bp_product.route('/type/<int:id>')
+@bp_product.route('/type/<int:id>', methods=['GET'])
 def type_get(id):
     _type = ProductType.query.filter(ProductType.id == id).one()
     schema = ProductTypeSchema()
     result = schema.dump(_type)
     return result, 200
 
-@bp_product.route('/type/create', methods=['POST'])
+@bp_product.route('/type/', methods=['POST'])
 def type_post():
     try:
         _type = ProductType(
@@ -42,7 +42,7 @@ def type_post():
 
     return result, 201
 
-@bp_product.route('/type/delete/<int:id>')
+@bp_product.route('/type/<int:id>/', methods=['DELETE'])
 def type_delete(id):
     try:
         _type = ProductType.query.filter(ProductType.id == id).one()
@@ -54,7 +54,7 @@ def type_delete(id):
 
     return {}, 200
 
-@bp_product.route('/type/update/<int:id>/', methods=['PUT'])
+@bp_product.route('/type/<int:id>/', methods=['PATCH'])
 def type_update(id):
     try:
         _type = ProductType.query.filter(ProductType.id == id).one()
@@ -69,21 +69,21 @@ def type_update(id):
 
     return result, 201
 
-@bp_product.route('/manufacturer')
+@bp_product.route('/manufacturer', methods=['GET'])
 def manufacturer_list():
     manufacturers = Manufacturer.query.all()
     schema = ManufacturerSchema(many=True)
     result = schema.dump(manufacturers)
     return result, 200
 
-@bp_product.route('/manufacturer/<int:id>')
+@bp_product.route('/manufacturer/<int:id>', methods=['GET'])
 def manufacturer_get(id):
     manufacturer = Manufacturer.query.filter(Manufacturer.id == id).one()
     schema = ManufacturerSchema()
     result = schema.dump(manufacturer)
     return result, 200
 
-@bp_product.route('/manufacturer/create', methods=['POST'])
+@bp_product.route('/manufacturer/', methods=['POST'])
 def manufacturer_post():
     try:
         manufacturer = Manufacturer(
@@ -101,7 +101,7 @@ def manufacturer_post():
 
     return result, 201
 
-@bp_product.route('/manufacturer/delete/<int:id>')
+@bp_product.route('/manufacturer/<int:id>', methods=['DELETE'])
 def manufacturer_delete(id):
     try:
         manufacturer = Manufacturer.query.filter(Manufacturer.id == id).one()
@@ -113,7 +113,7 @@ def manufacturer_delete(id):
 
     return {}, 200
 
-@bp_product.route('/manufacturer/update/<int:id>/', methods=['PUT'])
+@bp_product.route('/manufacturer/<int:id>/', methods=['PATCH'])
 def manufacturer_update(id):
     try:
         manufacturer = Manufacturer.query.filter(Manufacturer.id == id).one()
@@ -128,21 +128,21 @@ def manufacturer_update(id):
 
     return result, 201
     
-@bp_product.route('/')
+@bp_product.route('/', methods=['GET'])
 def product_list():
     products = Product.query.all()
     schema = ProductSchema(many=True)
     result = schema.dump(products)
     return result, 200
 
-@bp_product.route('/<int:id>')
+@bp_product.route('/<int:id>', methods=['GET'])
 def product_get(id):
     product = Product.query.filter(Product.id == id).one()
     schema = ProductSchema()
     result = schema.dump(product)
     return result, 200
 
-@bp_product.route('/create', methods=['POST'])
+@bp_product.route('/', methods=['POST'])
 def product_post():
     try:
         product = Product(
@@ -161,7 +161,7 @@ def product_post():
 
     return result, 201
 
-@bp_product.route('/delete/<int:id>')
+@bp_product.route('/<int:id>/', methods=['DELETE'])
 def product_delete(id):
     try:
         product = Product.query.filter(Product.id == id).one()
@@ -173,7 +173,7 @@ def product_delete(id):
 
     return {}, 200
 
-@bp_product.route('/update/<int:id>/', methods=['PATCH'])
+@bp_product.route('/<int:id>/', methods=['PATCH'])
 def product_update(id):
     try:
         product = Product.query.filter(Product.id == id).one()

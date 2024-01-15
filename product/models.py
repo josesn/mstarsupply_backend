@@ -4,13 +4,14 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
+
 from mstarsupply_backend.database import db
 
 class ProductType(db.Model):
     __tablename__ = "product_type"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(30))
+    name: Mapped[str] = mapped_column(String(5), unique=True, nullable=False)
 
 class Manufacturer(db.Model):
     __tablename__ = "manufacturer"

@@ -3,6 +3,7 @@ from flask_cors import CORS
 
 from mstarsupply_backend.database import configure_db
 from product.routes import bp_product
+from entry.routes import bp_entry
 
 def create_app():
     app = Flask(__name__)
@@ -17,5 +18,6 @@ def create_app():
 
     #BLUEPRINTS
     app.register_blueprint(bp_product)
+    app.register_blueprint(bp_entry)
 
     return app
