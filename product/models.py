@@ -11,7 +11,7 @@ class ProductType(db.Model):
     __tablename__ = "product_type"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(5), unique=True, nullable=False)
+    name: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
 
 class Manufacturer(db.Model):
     __tablename__ = "manufacturer"
@@ -30,5 +30,7 @@ class Product(db.Model):
     type_id: Mapped[int] = mapped_column(ForeignKey("product_type.id"))
     _type: Mapped["ProductType"] = relationship()
     description: Mapped[str] = mapped_column(String(200))
+    is_active: Mapped[bool] = mapped_column(unique=False, default=True)
+
 
 

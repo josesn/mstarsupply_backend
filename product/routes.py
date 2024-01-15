@@ -131,6 +131,9 @@ def manufacturer_update(id):
 @bp_product.route('/', methods=['GET'])
 def product_list():
     products = Product.query.all()
+    if 'active' in request.args:
+        products = [e for e in products if e.is_active == request.args['active']]
+        
     schema = ProductSchema(many=True)
     result = schema.dump(products)
     return result, 200
