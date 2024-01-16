@@ -18,25 +18,29 @@ def entry_report():
     if 'type' in request.args:
         entries = [e for e in entries if e._type == request.args['type']]
     if 'month' in request.args:
-        entries = [e for e in entries if e.datetime.month == request.args['month']]
+        entries = [e for e in entries if e.datetime.data().month == int(request.args['month'])]
     if 'year' in request.args:
-        entries = [e for e in entries if e.datetime.year == request.args['year']]
-        
-    list_keys = ('Total', 'Produto', 'Tipo', 'Local', 'Data', "Hora")
-    try:
-        for q in entries:
-            fields = (
-                {'value': q.quantity, 'prefix': "", 'suffix': "", 'custom_format': {'pdf': '', 'xlsx': ''}},
-                {'value': q.product.name if q.product else None, 'prefix': "", 'suffix': "", 
-                 'custom_format': {'pdf': '', 'xlsx': ''}},
-                {'value': q._type, 'prefix': "", 'suffix': "", 'custom_format': {'pdf': '', 'xlsx': ''}},
-                {'value': q.local, 'prefix': "", 'suffix': "", 'custom_format': {'pdf': '', 'xlsx': ''}},
-                {'value': q.datetime.date(), 'prefix': "", 'suffix': "", 'custom_format': {'pdf': '', 'xlsx': ''}},
-                {'value': q.datetime.time(), 'prefix': "", 'suffix': "", 'custom_format': {'pdf': '', 'xlsx': ''}},
-            )
-            list_values.append(fields)
-    except Exception as e:
-        return "<p>ERROR</p>"
+        entries = [e for e in entries if e.datetime.data().year == int(request.args['year'])]
+    
+    if entries:
+        try:
+            list_keys = ('ID', 'PRODUTO', 'TIPO', 'TOTAL', 'LOCAL', 'DATA')
+            for q in entries:
+                fields = (
+                    {'value': q.product.id if q.product else None, 'prefix': "", 'suffix': "", 
+                    'custom_format': {'pdf': '', 'xlsx': ''}},
+                    {'value': q.product.name if q.product else None, 'prefix': "", 'suffix': "", 
+                    'custom_format': {'pdf': '', 'xlsx': ''}},
+                    {'value': q._type, 'prefix': "", 'suffix': "", 'custom_format': {'pdf': '', 'xlsx': ''}},
+                    {'value': q.quantity, 'prefix': "", 'suffix': "", 'custom_format': {'pdf': '', 'xlsx': ''}},
+                    {'value': q.local, 'prefix': "", 'suffix': "", 'custom_format': {'pdf': '', 'xlsx': ''}},
+                    {'value': q.datetime.date(), 'prefix': "", 'suffix': "", 'custom_format': {'pdf': '', 'xlsx': ''}},
+                )
+                list_values.append(fields)
+        except Exception as e:
+            return str(e), 404
+    else:
+        return [], 200
     
     pdf_generator = GeneratePDF('Entradas e saidas', list_keys, list_values)
     pdf_generator.prepare_report_pdf()
