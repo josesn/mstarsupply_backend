@@ -2,8 +2,8 @@ from flask import Flask
 from flask_cors import CORS
 
 from mstarsupply_backend.database import configure_db
-from product.routes import bp_product
-from entry.routes import bp_entry
+from mstarsupply_backend.product.routes import bp_product
+from mstarsupply_backend.entry.routes import bp_entry
 
 def create_app():
     app = Flask(__name__)

@@ -1,13 +1,18 @@
+from datetime import datetime
+
 from flask import Blueprint
 from flask import request
 from flask import make_response
 from flask.helpers import send_file, url_for
-from mstarsupply_backend.database import db
-from .models import Entry
-from entry.schemas import EntrySchema
-from report.utils import GeneratePDF
-from datetime import datetime
+
 from sqlalchemy import select
+
+from mstarsupply_backend.database import db
+from mstarsupply_backend.report.utils import GeneratePDF
+
+from .models import Entry
+from .schemas import EntrySchema
+
 
 bp_entry = Blueprint('entry', __name__ , url_prefix="/entry")
 
@@ -24,7 +29,7 @@ def entry_report():
     
     if entries:
         try:
-            list_keys = ('ID', 'PRODUTO', 'TIPO', 'TOTAL', 'LOCAL', 'DATA')
+            list_keys = ('ID', 'MERCADORIA', 'TIPO', 'TOTAL', 'LOCAL', 'DATA')
             for q in entries:
                 fields = (
                     {'value': q.product.id if q.product else None, 'prefix': "", 'suffix': "", 
@@ -42,11 +47,11 @@ def entry_report():
     else:
         return [], 200
     
-    pdf_generator = GeneratePDF('Entradas e saidas', list_keys, list_values)
+    pdf_generator = GeneratePDF('Movimentação de mercadorias', list_keys, list_values)
     pdf_generator.prepare_report_pdf()
     pdf = pdf_generator.generate_template()
     return send_file(pdf, as_attachment=True, mimetype='application/pdf',
-        download_name='entry_report.pdf', max_age=0)
+        download_name='entry_report_{}.pdf'.format(datetime.now()), max_age=0)
 
 @bp_entry.route('/', methods=['GET'])
 def entry_list():

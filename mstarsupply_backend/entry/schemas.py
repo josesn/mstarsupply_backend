@@ -1,5 +1,6 @@
 from marshmallow import Schema, fields
-from product import schemas as product_schemas
+
+from mstarsupply_backend.product import schemas as product_schemas
 
 class EntrySchemaCreate(Schema):
     id = fields.Int()

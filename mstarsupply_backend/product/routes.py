@@ -2,11 +2,13 @@ from flask import Flask
 from flask import Blueprint
 from flask import request
 
+from sqlalchemy import select
+
 from mstarsupply_backend.database import db
+
 from .models import ProductType, Manufacturer, Product
 from .schemas import ProductTypeSchema, ProductSchema, ManufacturerSchema
 
-from sqlalchemy import select
 
 bp_product = Blueprint('product', __name__ , url_prefix="/product")
 

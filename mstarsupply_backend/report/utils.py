@@ -1,11 +1,10 @@
-from datetime import datetime
-from re import sub
 import decimal
 import pytz
 
-# from django.utils import timezone, dateformat
+from datetime import datetime, date, time
+from re import sub
 from io import BytesIO, StringIO
-from datetime import date, time
+
 from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle, Image
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
@@ -17,7 +16,6 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
 local_timezone = pytz.timezone("America/Sao_Paulo")
-
 
 class GeneratePDF:
     def __init__(self, title, headers, values):
@@ -53,7 +51,7 @@ class GeneratePDF:
         file_date = datetime.now().astimezone(local_timezone).date().strftime("%d%m%Y")
         file_time = datetime.now().astimezone(local_timezone).time().strftime("%H%M%S")
         self.filename = (
-            "relatorio_entradas_{}_{}.pdf".format(file_date, file_time)
+            "relatorio_movimentação_{}_{}.pdf".format(file_date, file_time)
         )
         pattern = 0.1 * cm
         page_size = (A4[1], A4[0]) if self.horizontal else (A4[0], A4[0])
@@ -82,7 +80,6 @@ class GeneratePDF:
             leading=10,
         )
 
-        #logo = Image("images/logo_abastece.png", height=25, width=60)
         infos = Paragraph("",title_style)
 
         table_style = TableStyle(
