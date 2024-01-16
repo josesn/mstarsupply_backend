@@ -23,9 +23,9 @@ def entry_report():
     if 'type' in request.args:
         entries = [e for e in entries if e._type == request.args['type']]
     if 'month' in request.args:
-        entries = [e for e in entries if e.datetime.data().month == int(request.args['month'])]
+        entries = [e for e in entries if e.datetime.date().month == int(request.args['month'])]
     if 'year' in request.args:
-        entries = [e for e in entries if e.datetime.data().year == int(request.args['year'])]
+        entries = [e for e in entries if e.datetime.date().year == int(request.args['year'])]
     
     if entries:
         try:
