@@ -32,7 +32,7 @@ class Entry(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     quantity: Mapped[int] = mapped_column()
-    datetime: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    datetime: Mapped[datetime] = mapped_column(DateTime(), default=datetime.utcnow)
     local: Mapped[str] = mapped_column(String(255))
     product_id: Mapped[int] = mapped_column(ForeignKey("product.id"))
     product: Mapped["Product"] = relationship()

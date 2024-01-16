@@ -6,7 +6,7 @@ from mstarsupply_backend.database import db
 from .models import Entry
 from entry.schemas import EntrySchema
 from report.utils import GeneratePDF
-
+from datetime import datetime
 from sqlalchemy import select
 
 bp_entry = Blueprint('entry', __name__ , url_prefix="/entry")
@@ -17,18 +17,22 @@ def entry_report():
     entries = Entry.query.all()
     if 'type' in request.args:
         entries = [e for e in entries if e._type == request.args['type']]
+    if 'month' in request.args:
+        entries = [e for e in entries if e.datetime.month == request.args['month']]
+    if 'year' in request.args:
+        entries = [e for e in entries if e.datetime.year == request.args['year']]
         
     list_keys = ('Total', 'Produto', 'Tipo', 'Local', 'Data', "Hora")
     try:
         for q in entries:
             fields = (
                 {'value': q.quantity, 'prefix': "", 'suffix': "", 'custom_format': {'pdf': '', 'xlsx': ''}},
-                {'value': q.datetime.date(), 'prefix': "", 'suffix': "", 'custom_format': {'pdf': '', 'xlsx': ''}},
-                {'value': q.datetime.time(), 'prefix': "", 'suffix': "", 'custom_format': {'pdf': '', 'xlsx': ''}},
-                {'value': q.local, 'prefix': "", 'suffix': "", 'custom_format': {'pdf': '', 'xlsx': ''}},
                 {'value': q.product.name if q.product else None, 'prefix': "", 'suffix': "", 
                  'custom_format': {'pdf': '', 'xlsx': ''}},
                 {'value': q._type, 'prefix': "", 'suffix': "", 'custom_format': {'pdf': '', 'xlsx': ''}},
+                {'value': q.local, 'prefix': "", 'suffix': "", 'custom_format': {'pdf': '', 'xlsx': ''}},
+                {'value': q.datetime.date(), 'prefix': "", 'suffix': "", 'custom_format': {'pdf': '', 'xlsx': ''}},
+                {'value': q.datetime.time(), 'prefix': "", 'suffix': "", 'custom_format': {'pdf': '', 'xlsx': ''}},
             )
             list_values.append(fields)
     except Exception as e:
@@ -60,8 +64,14 @@ def entry_get(id):
 @bp_entry.route('/', methods=['POST'])
 def entry_post():
     try:
+        entry_data = request.get_json()
+        date = entry_data.get('datetime')
+        if date: 
+            date = datetime.strptime(date, "%Y-%m-%dT%H:%M:%S")   
+            entry_data["datetime"] = date
+            
         entry = Entry(
-            **request.json
+            **entry_data
         )
         db.session.add(entry)
     except:

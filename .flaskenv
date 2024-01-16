@@ -1,0 +1,3 @@
+FLASK_APP=mstarsupply_backend.app
+FLASK_ENV=Development
+FLASK_DEBUG=True

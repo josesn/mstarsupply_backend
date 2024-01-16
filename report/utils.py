@@ -53,7 +53,7 @@ class GeneratePDF:
         file_date = datetime.now().astimezone(local_timezone).date().strftime("%d%m%Y")
         file_time = datetime.now().astimezone(local_timezone).time().strftime("%H%M%S")
         self.filename = (
-            "relatorios_entradas_{}_{}.pdf".format(file_date, file_time)
+            "relatorio_entradas_{}_{}.pdf".format(file_date, file_time)
         )
         pattern = 0.1 * cm
         page_size = (A4[1], A4[0]) if self.horizontal else (A4[0], A4[0])
@@ -83,14 +83,7 @@ class GeneratePDF:
         )
 
         #logo = Image("images/logo_abastece.png", height=25, width=60)
-        infos = Paragraph(
-            "Relatório de {} exportado pelo sistema.<br />Relatório emitido em {} às {}".format(
-                self.title,
-                datetime.now().astimezone(local_timezone).strftime("%d/%m/%Y"),
-                datetime.now().astimezone(local_timezone).strftime("%H:%M"),
-            ),
-            title_style,
-        )
+        infos = Paragraph("",title_style)
 
         table_style = TableStyle(
             [
@@ -108,7 +101,7 @@ class GeneratePDF:
             ]
         )
 
-        table = Table([[]], colWidths=[45, self.max_width - 85])
+        table = Table([[infos]], colWidths=[45, self.max_width - 85])
 
         table.setStyle(table_grid_style)
         table.setStyle(table_style)

@@ -7,7 +7,7 @@ from entry.routes import bp_entry
 
 def create_app():
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite+pysqlite:///:memory:"
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite+pysqlite:///./supply_db"
     app.config["SQLALCHEMY_ECHO"] = True
 
     # CORS
